@@ -1,0 +1,16 @@
+{
+	"name": "emptgt_stg",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerstg",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"table": "employee"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

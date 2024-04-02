@@ -1,0 +1,16 @@
+{
+	"name": "SqlServerstg",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=DESKTOP-BFDM5UN;initial catalog=STG;user id=saa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5ZmJhOWE5ZC1jMTAxLTQ5NzEtODYyOC0wNjZkZmFjNTljY2YiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IR-SelfHosted",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

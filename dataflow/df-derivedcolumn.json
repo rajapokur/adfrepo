@@ -1,0 +1,64 @@
+{
+	"name": "df-derivedcolumn",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "blob",
+						"type": "DatasetReference"
+					},
+					"name": "emp"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "emphike"
+				}
+			],
+			"transformations": [
+				{
+					"name": "hike"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {_c0} as short,",
+				"          {_c1} as string,",
+				"          {_c2} as string,",
+				"          {_c3} as string,",
+				"          {_c4} as string,",
+				"          {_c5} as string,",
+				"          {_c6} as string,",
+				"          {_c7} as short,",
+				"          {_c8} as double,",
+				"          {_c9} as double,",
+				"          {_c10} as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> emp",
+				"emp derive(HIKE = iif({_c10}==10, {_c7}*0.2, iif({_c10}==20, {_c7}*0.3, {_c7}*0.4))) ~> hike",
+				"hike sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     fileSystem: 'vrpadlsgen',",
+				"     folderPath: 'input/emp',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> emphike"
+			]
+		}
+	}
+}

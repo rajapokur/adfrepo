@@ -1,0 +1,99 @@
+{
+	"name": "df_conditional",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "emp_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "empparquet"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "snkemp10"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "emp20"
+				},
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "emp30"
+				}
+			],
+			"transformations": [
+				{
+					"name": "emp10"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmployeeNO as integer,",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as integer,",
+				"          HIREDATE as date,",
+				"          SAL as decimal(19,4),",
+				"          COMM as decimal(19,4),",
+				"          DepartmentNO as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> empparquet",
+				"empparquet split(DepartmentNO==10,",
+				"     DepartmentNO==20,",
+				"     DepartmentNO==30,",
+				"     disjoint: false) ~> emp10@(emp10, emp20, emp30)",
+				"emp10@emp10 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     fileSystem: 'vrpadlsgen',",
+				"     folderPath: 'parquetoutput/emp10',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> snkemp10",
+				"emp10@emp20 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'vrpadlsgen',",
+				"     folderPath: 'parquetoutput',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> emp20",
+				"emp10@emp30 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'avro',",
+				"     fileSystem: 'vrpadlsgen',",
+				"     folderPath: 'parquetoutput/emp30',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> emp30"
+			]
+		}
+	}
+}

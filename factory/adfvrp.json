@@ -1,0 +1,9 @@
+{
+	"name": "adfvrp",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "fd227fed-d25b-443f-a3b4-51a6f32d6a61",
+		"tenantId": "c46d3471-94f0-4531-9d9a-3d72f2d40230"
+	}
+}

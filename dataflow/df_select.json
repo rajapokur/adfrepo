@@ -1,0 +1,71 @@
+{
+	"name": "df_select",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "emp_parquet",
+						"type": "DatasetReference"
+					},
+					"name": "empparquet"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					},
+					"name": "empout"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EmployeeNO as integer,",
+				"          ENAME as string,",
+				"          JOB as string,",
+				"          MGR as integer,",
+				"          HIREDATE as date,",
+				"          SAL as decimal(19,4),",
+				"          COMM as decimal(19,4),",
+				"          DepartmentNO as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> empparquet",
+				"empparquet select(mapColumn(",
+				"          EmployeeNO,",
+				"          ENAME,",
+				"          JOB,",
+				"          SAL,",
+				"          COMM,",
+				"          DepartmentNO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     fileSystem: 'vrpadlsgen',",
+				"     folderPath: 'input/emp',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> empout"
+			]
+		}
+	}
+}
